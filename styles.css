@@ -1,0 +1,104 @@
+@font-face {
+    font-family: 'Iosevka Aile';
+    src: url('fonts/IosevkaAile-Regular.ttc') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Iosevka';
+    src: url('fonts/Iosevka-Regular.ttc') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Iosevka Etoile';
+    src: url('fonts/IosevkaEtoile-Regular.ttc') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+
+/* Body and paragraph styles */
+body {
+    background-color: #F8F5D7; /* Color from config.php */
+    font-family: 'Iosevka Aile', sans-serif;
+}
+
+p {
+    font-family: 'Iosevka Aile', sans-serif;
+    font-weight: normal;
+}
+
+/* Heading styles */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Iosevka Aile', sans-serif;
+    font-weight: bold;
+}
+
+/* Code styles */
+code, pre {
+    font-family: 'Iosevka', monospace;
+}
+
+/* Horizontal menu styles */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: #F8F5D7; /* Same as body background */
+    text-align: center;
+}
+
+nav li {
+    display: inline-block;
+}
+
+nav a {
+    display: block;
+    padding: 14px 16px;
+    text-decoration: none;
+    color: inherit; /* Inherits the default text color */
+    background-color: inherit; /* Inherits the default background color */
+}
+
+/* Hover effect for menu items */
+nav a:hover {
+    background-color: #9E0144; /* Background color on hover */
+    color: white; /* Text color on hover */
+}
+
+/* General link styles */
+a {
+    color: #9E0144; /* All hyperlinks color */
+    text-decoration: none;
+}
+
+/* Hover effect for links */
+a:hover {
+    text-decoration: underline; /* Underline on hover */
+    background-color: transparent; /* No background color change */
+    color: #9E0144; /* Keeps the text color the same on hover */
+}
+
+
+/* Center the 'Blog Articles' section */
+main.blog-articles {
+    width: 100%; /* Use 100% for full width or specify a width to center */
+    max-width: 960px; /* Maximum width of the container */
+    margin: 0 auto; /* Auto margins to center the block */
+    text-align: left; /* Left align the text inside the container */
+}
+
+
+/* Main container */
+main {
+    width: 100%; /* Adjust the width as necessary */
+    max-width: 960px; /* Or whatever maximum width you prefer */
+    margin: 0 auto; /* This will center the container */
+    text-align: left;
+}
+
+
