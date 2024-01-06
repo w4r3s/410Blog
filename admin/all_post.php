@@ -4,33 +4,39 @@ session_start();
 require_once '../config.php';
 require_once '../connect.php';
 
-
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete'])) {
     $selectedPosts = $_POST['selected_posts'] ?? [];
     if (!empty($selectedPosts)) {
-        // Delete tags associated with blog posts
+        // 先删除博文和标签的关联
         $placeholders = implode(',', array_fill(0, count($selectedPosts), '?'));
         $stmt = $pdo->prepare("DELETE FROM post_tags WHERE post_id IN ($placeholders)");
         $stmt->execute($selectedPosts);
 
-        // Delete blog post
+        // 删除博文
         $stmt = $pdo->prepare("DELETE FROM posts WHERE post_id IN ($placeholders)");
         $stmt->execute($selectedPosts);
+
+        // 检查并删除不再使用的标签
+        $stmt = $pdo->query("DELETE FROM tags WHERE tag_id NOT IN (SELECT DISTINCT tag_id FROM post_tags)");
+        $stmt->execute();
     }
 }
 
-// Get all blog posts
+// 获取所有博文
 $stmt = $pdo->prepare("SELECT * FROM posts ORDER BY created_at DESC");
 $stmt->execute();
 $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
+
+
+
+
 
 <!DOCTYPE html>
 <html lang="en">
