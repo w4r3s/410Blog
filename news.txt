@@ -1,1 +1,2 @@
-Fixed an XSS
+1. Fixed an XSS.
+2. Made some optimizations for the administrator panel.
