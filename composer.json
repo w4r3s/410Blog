@@ -1,0 +1,7 @@
+{
+    "require": {
+        "erusev/parsedown": "^1.7",
+        "ezyang/htmlpurifier": "^4.17",
+        "league/html-to-markdown": "^5.1"
+    }
+}
