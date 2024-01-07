@@ -9,9 +9,17 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
 require_once 'version.php';
 $currentVersion = getCurrentVersion(); 
 $updateMessage = '';
+$newsItems = ''; // Initialize $newsItems to ensure it's always set
+
+
+
+
+
+
 
 if (isset($_POST['check_updates'])) {
-    checkForUpdates($updateMessage, $currentVersion);
+    // Assuming checkForUpdates now populates $newsItems as well
+    checkForUpdates($updateMessage, $newsItems, $currentVersion);
 }
 
 $currentDate = date('Y-m-d'); 
@@ -136,6 +144,67 @@ $currentDate = date('Y-m-d');
         .update-message {
             /* Styles for the update message */
         }
+
+        .update-news {
+            list-style-type: none; /* No bullets */
+            padding: 0;
+            margin: 0;
+        }
+
+        .update-news li {
+            background-color: #ffe599; /* Light yellow background */
+            border-left: 5px solid #9E0144; /* Thick left border */
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .news-update-container {
+            background-color: #f8f5d7; /* Same as body bg color */
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-update-container h2 {
+            color: #9E0144; /* Similar to button bg color */
+            font-family: 'Iosevka Etoile', serif;
+            font-size: 1.5em;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1em;
+            float: right;
+
+        }
+
+        .links-block, .button-container {
+        text-align: center;
+        display: flex;
+        justify-content: center; /* Centers the content horizontally */
+        align-items: center; /* Centers the content vertically */
+        flex-wrap: wrap; /* Allows items to wrap onto the next line */
+        gap: 10px; /* Adds space between the items */
+        margin-top: 20px; /* Adds space above the block */
+    }
+
+    .links-block a, .button-container form {
+        margin: 4px; /* Adds space around each link and form */
+    }
+
+    .button-container {
+        order: 1; /* Ensures this container comes first */
+    }
+
+    .links-block {
+        order: 2; /* Ensures the links come after the buttons */
+    }
+
+    
     </style>
 </head>
 <body>
@@ -146,6 +215,7 @@ $currentDate = date('Y-m-d');
             <p>Today is: <?php echo date('Y-m-d'); ?></p>
         </div>
 
+
         <!-- Version, Update, and Right Side Info Block -->
         <div class="content-block">
             <div class="block update-block">
@@ -153,31 +223,49 @@ $currentDate = date('Y-m-d');
                 <?php if ($updateMessage): ?>
                     <div class="update-message"><?php echo $updateMessage; ?></div>
                 <?php endif; ?>
-                <form action="admin.php" method="post">
-                    <input type="submit" name="check_updates" value="Check for Updates">
-                </form>
             </div>
 
             <div class="block right-side">
-                <p>Current IP: <?php echo htmlspecialchars($_SERVER['REMOTE_ADDR']); ?></p>
-                <p>Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>
-                <!-- Add more right-side information here if needed -->
+                <p>Current IP: <?php echo htmlspecialchars($_SERVER['REMOTE_ADDR']); ?> & Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>
+                <!--<p>Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>-->
+                
+                <div class="button-container">
+                    <div class="backup-instruction">
+                        <h4>⚠️ Note: Database Backup</h4>
+                        <p>When you get a 0-byte file, it typically indicates that the mysqldump command did not execute successfully. There can be various reasons for this:</p>
+                        <ul>
+                            <li>The mysqldump command might not be available in the PATH environment variable accessible by the PHP execution environment.</li>
+                            <li>The database credentials in the config.php might be incorrect.</li>
+                            <li>The user associated with the database might not have the necessary permissions to perform the dump.</li>
+                            <li>There could be issues with the passthru function, such as disabled exec functions in your PHP configuration (disable_functions in php.ini).</li>
+                        </ul>
+                    </div>
+
+
+
+                </div>
             </div>
         </div>
 
-        <!-- Links Block -->
-        <div class="block links-block">
-            <a href="edit.php">Write a Post</a>
-            <a href="pwd_change.php">Change Password</a>
-            <a href="all_post.php">Manage Posts</a>
-            <a href="index_edit.php">Edit Home Page</a>
-            <!--
-            <form action="generate_static.php" method="post">
-                <input type="submit" value="Generate Static Site">
-            </form>
-                -->
-            
-        </div>
+
+        <div class="content-block">
+    <div class="button-container">
+        <form action="db_backup.php" method="post">
+            <input type="submit" value="Database Backup">
+        </form>
+        <form action="admin.php" method="post">
+            <input type="submit" name="check_updates" value="Check for Updates">
+        </form>
     </div>
+    <div class="links-block">
+        <a href="edit.php">Write a Post</a>
+        <a href="pwd_change.php">Change Password</a>
+        <a href="all_post.php">Manage Posts</a>
+        <a href="index_edit.php">Edit Home Page</a>
+    </div>
+</div>
+
+
+
 </body>
 </html>

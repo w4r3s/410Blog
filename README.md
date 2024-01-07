@@ -7,11 +7,9 @@
 
 ![](https://raw.githubusercontent.com/w4r3s/images/main/uPic/hznuLD.png)
 
-![](https://raw.githubusercontent.com/w4r3s/images/main/uPic/u4snMQ.png)
+![](https://raw.githubusercontent.com/w4r3s/images/main/uPic/82Nyk9.png)
 
-![](https://raw.githubusercontent.com/w4r3s/images/main/uPic/NkGaYm.png)
 
-![](https://raw.githubusercontent.com/w4r3s/images/main/uPic/VL1DZz.png)
 
 
 
