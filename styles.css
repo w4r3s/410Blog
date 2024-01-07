@@ -1,13 +1,14 @@
 @font-face {
     font-family: 'Iosevka Aile';
-    src: url('fonts/IosevkaAile-Regular.ttc') format('truetype');
+    src: url('fonts/IosevkaAile-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
+
 @font-face {
     font-family: 'Iosevka';
-    src: url('fonts/Iosevka-Regular.ttc') format('truetype');
+    src: url('fonts/Iosevka-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

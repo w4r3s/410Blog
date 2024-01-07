@@ -22,18 +22,19 @@ $currentDate = date('Y-m-d');
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator System</title>
     <style>
         @font-face {
             font-family: 'Iosevka Aile';
-            src: url('../fonts/IosevkaAile-Regular.ttc') format('truetype');
+            src: url('../fonts/IosevkaAile-Regular.ttf') format('truetype');
         }
 
         @font-face {
             font-family: 'Iosevka Etoile';
-            src: url('../fonts/IosevkaEtoile-Regular.ttc') format('truetype');
+            src: url('../fonts/IosevkaEtoile-Regular.ttf') format('truetype');
         }
 
         body {
@@ -170,6 +171,12 @@ $currentDate = date('Y-m-d');
             <a href="pwd_change.php">Change Password</a>
             <a href="all_post.php">Manage Posts</a>
             <a href="index_edit.php">Edit Home Page</a>
+            <!--
+            <form action="generate_static.php" method="post">
+                <input type="submit" value="Generate Static Site">
+            </form>
+                -->
+            
         </div>
     </div>
 </body>

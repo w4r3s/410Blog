@@ -1,1 +1,4 @@
-Fixed some security vulnerabilities.
+* CMS supports ico icon
+* Fixed some issues with RSS
+* Fixed font support issue
+* Fixed some minor bugs

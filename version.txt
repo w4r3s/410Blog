@@ -1,1 +1,1 @@
-1.1.0stable
+1.1.2stable

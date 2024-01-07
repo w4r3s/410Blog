@@ -1,13 +1,11 @@
 <?php
 $configFile = 'config.php';
 
-
 if (file_exists($configFile) && filesize($configFile) > 0) {
     die("CMS has been installed.");
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
- 
     $adminUsername = $_POST['admin_username'];
     $adminPassword = $_POST['admin_password'];
     $blogTitle = $_POST['blog_title'];
@@ -15,14 +13,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $dbUser = $_POST['db_user'];
     $dbPass = $_POST['db_pass'];
     $dbName = $_POST['db_name']; 
+    $blogUrl = $_POST['blog_url'];
 
-  
+    // Check if the URL has the correct format
+    if (!preg_match("/^(http:\/\/|https:\/\/).+$/", $blogUrl)) {
+        die("Unsupported format. The URL must start with http:// or https://.");
+    }
+
     $configContent = "<?php\n";
     $configContent .= "define('BLOG_TITLE', '$blogTitle');\n";
     $configContent .= "define('DB_HOST', '$dbHost');\n";
     $configContent .= "define('DB_USER', '$dbUser');\n";
     $configContent .= "define('DB_PASS', '$dbPass');\n";
     $configContent .= "define('DB_NAME', '$dbName');\n";
+    $configContent .= "define('BLOG_URL', '$blogUrl');\n";
     $configContent .= "define('BLOG_BACKGROUND_COLOR', '#F8F5D7');\n";
     $configContent .= "define('BLOG_FONT_PROSE', 'Iosevka Aile');\n";
     $configContent .= "define('BLOG_FONT_CODE', 'Iosevka Curly');\n";
@@ -31,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $configContent .= "?>";
 
     file_put_contents($configFile, $configContent);
-
 
     try {
         $pdo = new PDO("mysql:host=$dbHost", $dbUser, $dbPass);
@@ -45,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             password VARCHAR(255) NOT NULL
         )");
 
-        $hashedPassword = md5($adminPassword); 
+        $hashedPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
         $pdo->exec("INSERT INTO users (username, password) VALUES ('$adminUsername', '$hashedPassword')");
         
         echo "Successful installation！";
@@ -104,6 +107,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label for="blog_title">Title:</label><br>
         <input type="text" id="blog_title" name="blog_title" required><br>
 
+        <label for="blog_url">Blog URL (http:// or https://):</label><br>
+        <input type="text" id="blog_url" name="blog_url" value="http://" required><br>
+
         <label for="db_host">Database Host:</label><br>
         <input type="text" id="db_host" name="db_host" required><br>
 
@@ -116,10 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <label for="db_name">Database Name:</label><br>
         <input type="text" id="db_name" name="db_name" value="410blog" required><br>
 
-        <label for="admin_username">Admin:</label><br>
+        <label for="admin_username">Admin Username:</label><br>
         <input type="text" id="admin_username" name="admin_username" required><br>
 
-        <label for="admin_password">Password:</label><br>
+        <label for="admin_password">Admin Password:</label><br>
         <input type="password" id="admin_password" name="admin_password" required><br>
 
         <button type="submit">Next</button>
@@ -129,5 +135,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </html>';
 }
 ?>
-
-

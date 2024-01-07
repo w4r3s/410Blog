@@ -26,18 +26,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Administrator Login</title>
     <style>
         @font-face {
             font-family: 'Iosevka Aile';
-            src: url('../fonts/IosevkaAile-Regular.ttc') format('truetype');
+            src: url('../fonts/IosevkaAile-Regular.ttf') format('truetype');
         }
 
         @font-face {
             font-family: 'Iosevka Etoile';
-            src: url('../fonts/IosevkaEtoile-Regular.ttc') format('truetype');
+            src: url('../fonts/IosevkaEtoile-Regular.ttf') format('truetype');
         }
 
         body {

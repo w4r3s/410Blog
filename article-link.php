@@ -47,6 +47,7 @@ $parsedown = new Parsedown();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $post ? htmlspecialchars($post['title']) : 'Post not found'; ?> - <?php echo BLOG_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/atom-one-dark-reasonable.min.css">
 </head>
 <body>

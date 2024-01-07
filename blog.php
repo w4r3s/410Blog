@@ -10,6 +10,7 @@ require_once 'connect.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog Articles - <?php echo BLOG_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php include 'menu.php'; ?>
