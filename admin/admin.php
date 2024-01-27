@@ -262,6 +262,7 @@ $currentDate = date('Y-m-d');
         <a href="pwd_change.php">Change Password</a>
         <a href="all_post.php">Manage Posts</a>
         <a href="index_edit.php">Edit Home Page</a>
+        <a href="generate_static.php">Generate Static Pages</a>
     </div>
 </div>
 

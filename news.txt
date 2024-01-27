@@ -1,1 +1,1 @@
-* Supported Backup
+* Already supports generating static pages and uploading them to Github Pages.
