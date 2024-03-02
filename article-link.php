@@ -1,8 +1,6 @@
 <?php
 require_once 'config.php';
 require_once 'connect.php';
-
-// Introduce Composer's autoloading file to obtain Parsedown
 require_once 'vendor/autoload.php';
 
 ini_set('display_errors', 1);
@@ -35,9 +33,7 @@ if ($post_id) {
     }
 }
 
-
 $parsedown = new Parsedown();
-
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +44,8 @@ $parsedown = new Parsedown();
     <title><?php echo $post ? htmlspecialchars($post['title']) : 'Post not found'; ?> - <?php echo BLOG_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/atom-one-dark-reasonable.min.css">
+    <link rel="stylesheet" href="styles/styles/atom-one-dark.css">
+    <script src="styles/highlight.min.js"></script>
 </head>
 <body>
     <?php include 'menu.php'; ?>
@@ -73,7 +70,6 @@ $parsedown = new Parsedown();
     </main>
 
     <?php include 'footer.php'; ?>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
     <script>hljs.highlightAll();</script>
 </body>
 </html>

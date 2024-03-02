@@ -48,7 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             password VARCHAR(255) NOT NULL
         )");
 
-        $hashedPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
+        //$hashedPassword = password_hash($adminPassword, PASSWORD_DEFAULT);
+        $options = ['memory_cost' => 1<<17, 'time_cost' => 4, 'threads' => 2];
+        $hashedPassword = password_hash($adminPassword, PASSWORD_ARGON2ID, $options);
+
         $pdo->exec("INSERT INTO users (username, password) VALUES ('$adminUsername', '$hashedPassword')");
         
         echo "Successful installation！";

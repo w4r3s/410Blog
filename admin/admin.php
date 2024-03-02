@@ -258,11 +258,11 @@ $currentDate = date('Y-m-d');
         </form>
     </div>
     <div class="links-block">
-        <a href="edit.php">Write a Post</a>
-        <a href="pwd_change.php">Change Password</a>
-        <a href="all_post.php">Manage Posts</a>
-        <a href="index_edit.php">Edit Home Page</a>
-        <a href="generate_static.php">Generate Static Pages</a>
+        <a href="edit.php" target="_blank">Write a Post</a>
+        <a href="pwd_change.php" target="_blank">Change Password</a>
+        <a href="all_post.php" target="_blank">Manage Posts</a>
+        <a href="index_edit.php" target="_blank">Edit Home Page</a>
+        <a href="generate_static.php" target="_blank">Generate Static Pages</a>
     </div>
 </div>
 

@@ -19,7 +19,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($new_password === $confirm_password) {
         // Update password in database
-        $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+        // 使用 Argon2id 算法哈希新密码
+        $options = ['memory_cost' => 1<<17, 'time_cost' => 4, 'threads' => 2];
+        $hashed_password = password_hash($new_password, PASSWORD_ARGON2ID, $options);
+
         $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id = ?");
         if ($stmt->execute([$hashed_password, $_SESSION['user_id']])) {
             $message = 'Password updated successfully!';
@@ -30,6 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $message = 'The passwords entered twice do not match!';
     }
 }
+
 ?>
 
 <!DOCTYPE html>

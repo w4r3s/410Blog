@@ -10,7 +10,6 @@ $stmt = $pdo->prepare("SELECT content FROM homepage WHERE id = 1");
 $stmt->execute();
 $homepage = $stmt->fetch(PDO::FETCH_ASSOC);
 $homepageContent = $homepage ? $parsedown->text($homepage['content']) : '';
-
 ?>
 
 <!DOCTYPE html>
@@ -21,6 +20,7 @@ $homepageContent = $homepage ? $parsedown->text($homepage['content']) : '';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo BLOG_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="styles/styles/atom-one-dark.css">
 </head>
 <body>
     <?php include 'menu.php'; ?>
@@ -28,5 +28,9 @@ $homepageContent = $homepage ? $parsedown->text($homepage['content']) : '';
         <?php echo $homepageContent; ?>
     </main>
     <?php include 'footer.php'; ?>
+   
+    <script src="styles/highlight.min.js"></script>
+    <script>console.log('highlight.js should be loaded');</script>
+    <script>hljs.highlightAll();</script>
 </body>
 </html>

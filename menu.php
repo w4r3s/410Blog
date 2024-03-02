@@ -8,7 +8,7 @@
         <li><a href="contact.php">Contact</a></li>
         <li><a href="share.php">Share</a></li>
         <li><a href="files.php">Files</a></li>
-        <li><a href="paste.php">Paste</a></li>
+        <li><a href="https://hashb.in/">Paste</a></li>
         <li><a href="friends.php">Friends</a></li>
         
 

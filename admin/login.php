@@ -6,13 +6,13 @@ require_once '../connect.php';
 // Handle login logic
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = MD5($_POST['password']);
+    $password = $_POST['password']; // 直接获取输入的密码，不使用 MD5 哈希
 
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? AND password = ?");
-    $stmt->execute([$username, $password]);
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->execute([$username]);
     $user = $stmt->fetch();
 
-    if ($user) {
+    if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['user_id'];
         $_SESSION['username'] = $user['username'];
         header("Location: admin.php");
@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo "<p>Wrong user name or password</p>";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
