@@ -21,6 +21,14 @@ $homepageContent = $homepage ? $parsedown->text($homepage['content']) : '';
     <title><?php echo BLOG_TITLE; ?></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
     <link rel="stylesheet" href="styles/styles/atom-one-dark.css">
+    <style>
+    main img {
+        max-width: 960px;
+        max-height: 400px;
+        width: auto; /* 保持图片的原始宽高比 */
+        height: auto; /* 保持图片的原始宽高比 */
+    }
+    </style>
 </head>
 <body>
     <?php include 'menu.php'; ?>
@@ -34,3 +42,4 @@ $homepageContent = $homepage ? $parsedown->text($homepage['content']) : '';
     <script>hljs.highlightAll();</script>
 </body>
 </html>
+

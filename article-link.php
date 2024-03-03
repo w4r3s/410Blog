@@ -3,6 +3,7 @@ require_once 'config.php';
 require_once 'connect.php';
 require_once 'vendor/autoload.php';
 
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -46,6 +47,14 @@ $parsedown = new Parsedown();
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="styles/styles/atom-one-dark.css">
     <script src="styles/highlight.min.js"></script>
+    <style>
+    .post-content img {
+        max-width: 960px;
+        max-height: 400px;
+        width: auto; /* 保持图片的原始宽高比 */
+        height: auto; /* 保持图片的原始宽高比 */
+    }
+    </style>
 </head>
 <body>
     <?php include 'menu.php'; ?>
@@ -64,6 +73,8 @@ $parsedown = new Parsedown();
                     <p class="post-tags">Tags: <?php echo implode(', ', $tags); ?></p>
                 <?php endif; ?>
             </article>
+            
+
         <?php else: ?>
             <p>Post not found or invalid post ID.</p>
         <?php endif; ?>

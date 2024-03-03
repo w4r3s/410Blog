@@ -1,1 +1,5 @@
-* Changed the encryption method.
+* Supported ImgHost
+
+* Supported uploading images from clipboard
+
+* Supported batch import of MarkDown files

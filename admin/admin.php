@@ -263,6 +263,8 @@ $currentDate = date('Y-m-d');
         <a href="all_post.php" target="_blank">Manage Posts</a>
         <a href="index_edit.php" target="_blank">Edit Home Page</a>
         <a href="generate_static.php" target="_blank">Generate Static Pages</a>
+        <a href="recover.php" target="_blank">Recover Posts</a>
+        <a href="imghost.php" target="_blank">Image Hosting</a>
     </div>
 </div>
 

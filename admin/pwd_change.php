@@ -4,7 +4,6 @@ session_start();
 require_once '../config.php';
 require_once '../connect.php';
 
-
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
@@ -12,28 +11,56 @@ if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
 
 $message = '';
 
+function sanitizeMarkdownContent($text) {
+    $markdownCodeBlockPattern = '/(```[a-z]*\n[\s\S]*?\n```|`[^`]*`)/';
+    $parts = preg_split($markdownCodeBlockPattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
+    $sanitizedText = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    if ($new_password === $confirm_password) {
-        // Update password in database
-        // 使用 Argon2id 算法哈希新密码
-        $options = ['memory_cost' => 1<<17, 'time_cost' => 4, 'threads' => 2];
-        $hashed_password = password_hash($new_password, PASSWORD_ARGON2ID, $options);
-
-        $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE user_id = ?");
-        if ($stmt->execute([$hashed_password, $_SESSION['user_id']])) {
-            $message = 'Password updated successfully!';
+    foreach ($parts as $index => $part) {
+        if ($index % 2 == 0) {
+            $sanitizedText .= strip_tags($part);
         } else {
-            $message = 'Password update failed!';
+            $sanitizedText .= $part;
         }
-    } else {
-        $message = 'The passwords entered twice do not match!';
     }
+
+    return $sanitizedText;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['markdownFiles']['name'])) {
+    $totalFiles = count($_FILES['markdownFiles']['name']);
+
+    for ($i = 0; $i < $totalFiles; $i++) {
+        if ($_FILES['markdownFiles']['error'][$i] === UPLOAD_ERR_OK) {
+            $contentMarkdown = file_get_contents($_FILES['markdownFiles']['tmp_name'][$i]);
+            $sanitizedContent = sanitizeMarkdownContent($contentMarkdown);
+
+            // Assuming title and tags extraction logic here
+            // This needs to be adapted based on your file naming conventions and requirements
+            $title = 'Post Title'; // Placeholder title
+            $tags = ['default']; // Placeholder tags
+
+            $pdo->beginTransaction();
+            try {
+                $stmt = $pdo->prepare("INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)");
+                $stmt->execute([$_SESSION['user_id'], $title, $sanitizedContent]);
+                $postId = $pdo->lastInsertId();
+
+                foreach ($tags as $tagName) {
+                    // Insert tags logic here
+                }
+
+                $pdo->commit();
+                $message .= "File " . $_FILES['markdownFiles']['name'][$i] . " uploaded successfully!<br>";
+            } catch (Exception $e) {
+                $pdo->rollBack();
+                $message .= "An error occurred: " . $e->getMessage() . "<br>";
+            }
+        } else {
+            $message .= "Upload failed for file " . $_FILES['markdownFiles']['name'][$i] . " with error code " . $_FILES['markdownFiles']['error'][$i] . "<br>";
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password</title>
+    <title>Recover Post from Markdown</title>
     <style>
         @font-face {
             font-family: 'Iosevka Aile';
@@ -80,13 +107,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             display: block;
             width: 100%;
         }
-        h1 {
-            font-family: 'Iosevka Etoile', serif;
-        }
-        input, button {
-            padding: 0.5em;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+        input[type="file"] {
+            border: none;
         }
         button {
             background-color: #9E0144;
@@ -98,34 +120,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         button:hover {
             background-color: #d63384;
         }
-        a {
-            color: #9E0144;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: #d63384;
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
     <main>
-        <h1>Change Password</h1>
-
+        <h1>Recover Post from Markdown</h1>
         <?php if ($message): ?>
             <p><?php echo $message; ?></p>
         <?php endif; ?>
-
-        <form action="pwd_change.php" method="post">
-            <label for="new_password">New Password:</label>
-            <input type="password" id="new_password" name="new_password" required>
-            <label for="confirm_password">Confirm Password:</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-            <button type="submit">Change Password</button>
+        <form action="recover.php" method="post" enctype="multipart/form-data">
+            <label for="markdownFiles">Markdown Files:</label>
+            <input type="file" id="markdownFiles" name="markdownFiles[]" multiple required>
+            <button type="submit">Upload Files</button>
         </form>
-
-        <a href="admin.php">Return to Admin Panel</a>
     </main>
 </body>
 </html>
