@@ -1,6 +1,7 @@
 <?php
 require_once 'config.php';
 require_once 'connect.php';
+$lang = require __DIR__ . '/lang/lang_' . CURRENT_LANG . '.php';
 ?>
 
 <!DOCTYPE html>
@@ -16,8 +17,10 @@ require_once 'connect.php';
     <?php include 'menu.php'; ?>
 
     <main class="blog-articles">
-        <h2>Blog Articles</h2>
-        <p>If you have a compatible reader, be sure to check out my <a href="generate_rss.php">RSS feed</a> for automatic updates. Also check out the <a href="generate_jsonfeed.php">JSONFeed</a>.</p>
+        <!--<h2>Blog Articles</h2>-->
+        <!--<p>If you have a compatible reader, be sure to check out my <a href="generate_rss.php">RSS feed</a> for automatic updates. Also check out the <a href="generate_jsonfeed.php">JSONFeed</a>.</p>-->
+        <h2><?php echo $lang['blog_articles']; ?></h2>
+        <p><?php echo $lang['rss_feed_announcement']; ?></p>
         
         <?php
         $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");

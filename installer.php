@@ -32,6 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $configContent .= "define('BLOG_FONT_CODE', 'Iosevka Curly');\n";
     $configContent .= "define('BLOG_FONT_TITLE', 'Iosevka Etoile');\n";
     $configContent .= "define('DATE_FORMAT', 'd/m/Y');\n";
+    $configContent .= "define('CURRENT_LANG', 'en')";
     $configContent .= "?>";
 
     file_put_contents($configFile, $configContent);

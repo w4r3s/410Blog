@@ -10,6 +10,10 @@ require_once '../vendor/autoload.php';
 require_once '../config.php';
 require_once '../connect.php';
 
+//LANG
+//require_once __DIR__ . '/../config.php';
+$lang = require __DIR__ . '/../lang/lang_' . CURRENT_LANG . '.php';
+
 // 自定义函数，用于移除非Markdown代码块中的HTML标签
 function sanitizeMarkdownContent($text) {
     // 匹配Markdown代码块
@@ -144,16 +148,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <main>
         <form action="edit.php" method="post">
-            <label for="title">Title:</label>
+            <!--<label for="title">Title:</label>-->
+            <label for="title"><?php echo $lang['title']; ?></label>
             <input type="text" id="title" name="title" required>
             
-            <label for="content">Content (Markdown format):</label>
+            <!--<label for="content">Content (Markdown format):</label>-->
+            <label for="content"><?php echo $lang['content']; ?></label>
             <textarea id="content" name="content" rows="10" cols="30" required></textarea>
 
-            <label for="tags">Tags (separated by commas):</label>
+            <!--<label for="tags">Tags (separated by commas):</label>-->
+            <label for="tags"><?php echo $lang['post_tags']; ?></label>
             <input type="text" id="tags" name="tags">
             
-            <button type="submit">Post</button>
+            <!--<button type="submit">Post</button>-->
+            <button type="submit"><?php echo $lang['post_button']; ?></button>
         </form>
     </main>
 
@@ -181,7 +189,8 @@ $(document).ready(function() {
                             var markdownImage = '![](' + imageUrl + ')'; // 构造 Markdown 格式的图片链接
                             $('#content').val($('#content').val() + "\n" + markdownImage); // 将链接插入文本区域
                         } else {
-                            alert('Image upload failed.');
+                            //alert('Image upload failed.');
+                            alert('<?php echo $lang['image_upload_failed']; ?>');
                         }
                     },
                     error: function(xhr, status, error) {

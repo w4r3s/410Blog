@@ -1,75 +1,48 @@
 <?php
 session_start();
-
 require_once '../config.php';
 require_once '../connect.php';
 
+// 验证用户是否登录
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     header('Location: login.php');
     exit();
 }
 
+//LANG
+$lang = require __DIR__ . '/../lang/lang_' . CURRENT_LANG . '.php';
+
 $message = '';
 
-function sanitizeMarkdownContent($text) {
-    $markdownCodeBlockPattern = '/(```[a-z]*\n[\s\S]*?\n```|`[^`]*`)/';
-    $parts = preg_split($markdownCodeBlockPattern, $text, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $sanitizedText = '';
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $newPassword = $_POST['new_password'];
 
-    foreach ($parts as $index => $part) {
-        if ($index % 2 == 0) {
-            $sanitizedText .= strip_tags($part);
-        } else {
-            $sanitizedText .= $part;
-        }
-    }
+    try {
+        $pdo = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    return $sanitizedText;
-}
+        // 使用更安全的密码散列选项
+        $options = ['memory_cost' => 1<<17, 'time_cost' => 4, 'threads' => 2];
+        $hashedPassword = password_hash($newPassword, PASSWORD_ARGON2ID, $options);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['markdownFiles']['name'])) {
-    $totalFiles = count($_FILES['markdownFiles']['name']);
+        // 确保只有当前登录用户可以更改自己的密码
+        $stmt = $pdo->prepare("UPDATE users SET password = :password WHERE username = :username AND user_id = :user_id");
+        $stmt->execute([':password' => $hashedPassword, ':username' => $username, ':user_id' => $_SESSION['user_id']]);
 
-    for ($i = 0; $i < $totalFiles; $i++) {
-        if ($_FILES['markdownFiles']['error'][$i] === UPLOAD_ERR_OK) {
-            $contentMarkdown = file_get_contents($_FILES['markdownFiles']['tmp_name'][$i]);
-            $sanitizedContent = sanitizeMarkdownContent($contentMarkdown);
-
-            // Assuming title and tags extraction logic here
-            // This needs to be adapted based on your file naming conventions and requirements
-            $title = 'Post Title'; // Placeholder title
-            $tags = ['default']; // Placeholder tags
-
-            $pdo->beginTransaction();
-            try {
-                $stmt = $pdo->prepare("INSERT INTO posts (user_id, title, content) VALUES (?, ?, ?)");
-                $stmt->execute([$_SESSION['user_id'], $title, $sanitizedContent]);
-                $postId = $pdo->lastInsertId();
-
-                foreach ($tags as $tagName) {
-                    // Insert tags logic here
-                }
-
-                $pdo->commit();
-                $message .= "File " . $_FILES['markdownFiles']['name'][$i] . " uploaded successfully!<br>";
-            } catch (Exception $e) {
-                $pdo->rollBack();
-                $message .= "An error occurred: " . $e->getMessage() . "<br>";
-            }
-        } else {
-            $message .= "Upload failed for file " . $_FILES['markdownFiles']['name'][$i] . " with error code " . $_FILES['markdownFiles']['error'][$i] . "<br>";
-        }
+        $message = "Password reset successful for user: " . htmlspecialchars($username);
+    } catch (PDOException $e) {
+        $message = "Password reset failed: " . $e->getMessage();
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo CURRENT_LANG; ?>">
 <head>
-    <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recover Post from Markdown</title>
+    <title><?php echo $lang['reset_password']; ?></title>
     <style>
         @font-face {
             font-family: 'Iosevka Aile';
@@ -91,25 +64,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['markdownFiles']['name
             align-items: center;
             height: 100vh;
         }
-        main {
-            width: 100%;
-            max-width: 480px;
-            margin: 0 auto;
-            text-align: left;
+
+        form {
             background: white;
             padding: 2em;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
+
         label, input, button {
             font-family: 'Iosevka Aile', sans-serif;
-            margin-bottom: 0.5em;
+            margin-bottom: 1em;
             display: block;
             width: 100%;
         }
-        input[type="file"] {
-            border: none;
+
+        h1 {
+            font-family: 'Iosevka Etoile', serif;
+            color: #444;
         }
+
+        input, button {
+            padding: 0.5em;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
         button {
             background-color: #9E0144;
             color: white;
@@ -117,22 +98,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_FILES['markdownFiles']['name
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         button:hover {
             background-color: #d63384;
+        }
+
+        a {
+            color: #9E0144;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #d63384;
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <main>
-        <h1>Recover Post from Markdown</h1>
-        <?php if ($message): ?>
-            <p><?php echo $message; ?></p>
-        <?php endif; ?>
-        <form action="recover.php" method="post" enctype="multipart/form-data">
-            <label for="markdownFiles">Markdown Files:</label>
-            <input type="file" id="markdownFiles" name="markdownFiles[]" multiple required>
-            <button type="submit">Upload Files</button>
-        </form>
-    </main>
+    <?php if ($message): ?>
+        <p><?php echo $message; ?></p>
+    <?php endif; ?>
+    <form action="pwd_change.php" method="post">
+        <label for="username"><?php echo $lang['username']; ?></label><br>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="new_password"><?php echo $lang['new_password']; ?></label><br>
+        <input type="password" id="new_password" name="new_password" required><br>
+
+        <button type="submit"><?php echo $lang['save_changes']; ?></button>
+    </form>
 </body>
 </html>

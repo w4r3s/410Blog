@@ -3,6 +3,10 @@ session_start();
 require_once '../config.php';
 require_once '../connect.php';
 
+//LANG
+require_once __DIR__ . '/../config.php';
+$lang = require __DIR__ . '/../lang/lang_' . CURRENT_LANG . '.php';
+
 // Handle login logic
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
@@ -18,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header("Location: admin.php");
         exit();
     } else {
-        echo "<p>Wrong user name or password</p>";
+        echo "<h3>" . htmlspecialchars($lang['wrong_username_or_password'], ENT_QUOTES, 'UTF-8') . "</h3";
     }
 }
 
@@ -30,7 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administrator Login</title>
+    <!--<title>Administrator Login</title>-->
+    <title><?php echo $lang['administrator_login']; ?></title>
     <style>
         @font-face {
             font-family: 'Iosevka Aile';
@@ -105,14 +110,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
     <form action="login.php" method="post">
-        <h1>Administrator Login</h1>
-        <label for="username">Username:</label>
+        <!--<h1>Administrator Login</h1>-->
+        <h1><?php echo $lang['administrator_login']; ?></h1>
+        <!--<label for="username">Username:</label>-->
+        <label for="username"><?php echo $lang['username']; ?></label>
         <input type="text" id="username" name="username" required>
         <br>
-        <label for="password">Password:</label>
+        <!--<label for="password">Password:</label>-->
+        <label for="password"><?php echo $lang['password']; ?></label>
         <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">LOGIN</button>
+
+        <!--<button type="submit">LOGIN</button>-->
+        <button type="submit"><?php echo $lang['login']; ?></button>
     </form>
 </body>
 </html>

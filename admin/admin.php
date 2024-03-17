@@ -11,11 +11,16 @@ $currentVersion = getCurrentVersion();
 $updateMessage = '';
 $newsItems = ''; // Initialize $newsItems to ensure it's always set
 
+//LANG
+require_once __DIR__ . '/../config.php';
+$lang = require __DIR__ . '/../lang/lang_' . CURRENT_LANG . '.php';
 
 
 
 
 
+
+$username = isset($_SESSION['username']) ? htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8') : 'Guest';
 
 if (isset($_POST['check_updates'])) {
     // Assuming checkForUpdates now populates $newsItems as well
@@ -211,22 +216,34 @@ $currentDate = date('Y-m-d');
     <div class="container">
         <!-- Welcome and Date Block -->
         <div class="block header-block">
-            <h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h1>
-            <p>Today is: <?php echo date('Y-m-d'); ?></p>
+            <!--<h1>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?></h1>-->
+            <h1><?php printf($lang['welcome_user'], $username); ?></h1>
+
+            <!--<p>Today is: <?php echo date('Y-m-d'); ?></p>-->
+            <p><?php $date = date('Y-m-d'); printf($lang['today_is'], $date); ?></p>
         </div>
 
 
         <!-- Version, Update, and Right Side Info Block -->
         <div class="content-block">
             <div class="block update-block">
-                <p>Current Version: <?php echo htmlspecialchars($currentVersion); ?></p>
+
+                <!--<p>Current Version: <?php echo htmlspecialchars($currentVersion); ?></p>-->
+                <p><?php printf($lang['current_version'], $currentVersion); ?></p>
                 <?php if ($updateMessage): ?>
                     <div class="update-message"><?php echo $updateMessage; ?></div>
                 <?php endif; ?>
             </div>
 
             <div class="block right-side">
-                <p>Current IP: <?php echo htmlspecialchars($_SERVER['REMOTE_ADDR']); ?> & Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>
+                <!--<p>Current IP: <?php echo htmlspecialchars($_SERVER['REMOTE_ADDR']); ?> & Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>-->
+
+                <p><?php 
+                $currentIP = htmlspecialchars($_SERVER['REMOTE_ADDR'], ENT_QUOTES, 'UTF-8'); 
+                $lastLogin = isset($_SESSION['last_login_time']) ? htmlspecialchars($_SESSION['last_login_time'], ENT_QUOTES, 'UTF-8') : 'First login'; 
+                printf($lang['current_ip_last_login'], $currentIP, $lastLogin);
+                ?></p>
+
                 <!--<p>Last Login: <?php echo htmlspecialchars($_SESSION['last_login_time'] ?? 'First login'); ?></p>-->
                 
                 <div class="button-container">
@@ -250,21 +267,33 @@ $currentDate = date('Y-m-d');
 
         <div class="content-block">
     <div class="button-container">
-        <form action="db_backup.php" method="post">
-            <input type="submit" value="Database Backup">
-        </form>
-        <form action="admin.php" method="post">
-            <input type="submit" name="check_updates" value="Check for Updates">
-        </form>
-    </div>
+    <form action="db_backup.php" method="post">
+        <input type="submit" value="<?php echo htmlspecialchars($lang['database_backup'], ENT_QUOTES, 'UTF-8'); ?>">
+    </form>
+    <form action="admin.php" method="post">
+        <input type="submit" name="check_updates" value="<?php echo htmlspecialchars($lang['check_for_updates'], ENT_QUOTES, 'UTF-8'); ?>">
+    </form>
+</div>
+
     <div class="links-block">
-        <a href="edit.php" target="_blank">Write a Post</a>
-        <a href="pwd_change.php" target="_blank">Change Password</a>
-        <a href="all_post.php" target="_blank">Manage Posts</a>
-        <a href="index_edit.php" target="_blank">Edit Home Page</a>
-        <a href="generate_static.php" target="_blank">Generate Static Pages</a>
-        <a href="recover.php" target="_blank">Recover Posts</a>
-        <a href="imghost.php" target="_blank">Image Hosting</a>
+        <!--<a href="edit.php" target="_blank">Write a Post</a>-->
+        <a href="edit.php" target="_blank"><?php echo htmlspecialchars($lang['write_post'], ENT_QUOTES, 'UTF-8'); ?></a>
+        <a href="pwd_change.php" target="_blank"><?php echo htmlspecialchars($lang['change_password'], ENT_QUOTES, 'UTF-8'); ?></a>
+        <!--<a href="pwd_change.php" target="_blank">Change Password</a>-->
+        <!--<a href="all_post.php" target="_blank">Manage Posts</a>-->
+        <a href="all_post.php" target="_blank"><?php echo htmlspecialchars($lang['manage_posts'], ENT_QUOTES, 'UTF-8'); ?></a>
+        <!--<a href="index_edit.php" target="_blank">Edit Home Page</a>-->
+        <a href="index_edit.php" target="_blank"><?php echo htmlspecialchars($lang['edit_home_page'], ENT_QUOTES, 'UTF-8'); ?></a>
+
+        <!--<a href="generate_static.php" target="_blank">Generate Static Pages</a>-->
+        <a href="generate_static.php" target="_blank"><?php echo htmlspecialchars($lang['generate_static_pages'], ENT_QUOTES, 'UTF-8'); ?></a>
+
+        <!--<a href="recover.php" target="_blank">Recover Posts</a>-->
+        <a href="recover.php" target="_blank"><?php echo htmlspecialchars($lang['recover_posts'], ENT_QUOTES, 'UTF-8'); ?></a>
+
+        <!--<a href="imghost.php" target="_blank">Image Hosting</a>-->
+        <a href="imghost.php" target="_blank"><?php echo htmlspecialchars($lang['image_hosting'], ENT_QUOTES, 'UTF-8'); ?></a>
+
     </div>
 </div>
 

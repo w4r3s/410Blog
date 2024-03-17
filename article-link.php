@@ -3,6 +3,9 @@ require_once 'config.php';
 require_once 'connect.php';
 require_once 'vendor/autoload.php';
 
+require_once 'config.php'; // 确保此文件中定义了 CURRENT_LANG
+$lang = require __DIR__ . "/lang/lang_" . CURRENT_LANG . ".php";
+
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -63,14 +66,29 @@ $parsedown = new Parsedown();
         <?php if ($post): ?>
             <article>
                 <h1><?php echo htmlspecialchars($post['title']); ?></h1>
+                <!--
                 <p style="font-size: 14px; color: gray;">
                     Published on <?php echo $publishedDate; ?>, 
                     <?php echo $wordCount; ?> words, 
                     <?php echo $readingTime; ?> minute<?php echo ($readingTime == 1) ? '' : 's'; ?> to read
                 </p>
+        -->
+        <p style="font-size: 14px; color: gray;">
+                    <?php
+                    printf(
+                        $lang['published_on'],
+                        $publishedDate,
+                        $wordCount,
+                        $readingTime,
+                        $readingTime == 1 ? '' : 's' // 根据语言可能需要调整
+                    );
+                    ?>
+                </p>
+
                 <div class="post-content"><?php echo $parsedown->text($post['content']); ?></div>
                 <?php if (!empty($tags)): ?>
-                    <p class="post-tags">Tags: <?php echo implode(', ', $tags); ?></p>
+                    <!--<p class="post-tags">Tags: <?php echo implode(', ', $tags); ?></p>-->
+                    <p class="post-tags"><?php printf($lang['tags'], implode(', ', $tags)); ?></p>
                 <?php endif; ?>
             </article>
             

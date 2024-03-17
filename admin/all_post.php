@@ -3,6 +3,7 @@ session_start();
 
 require_once '../config.php';
 require_once '../connect.php';
+$lang = require __DIR__ . '/../lang/lang_' . CURRENT_LANG . '.php';
 
 if (!isset($_SESSION['user_id']) || !isset($_SESSION['username'])) {
     header('Location: login.php');
@@ -117,27 +118,34 @@ $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
     <main>
-        <h1>Manage Posts</h1>
+    
+
+        <!--<h1>Manage Posts</h1>-->
+        <h1><?php printf($lang['manage_posts']); ?></h1>
         <p>Total of <?php echo count($posts); ?> posts.</p>
 
         <form action="all_post.php" method="post">
             <div class="select-all">
                 <input type="checkbox" id="select_all" onclick="toggleAll(this)">
-                <label for="select_all">Select All</label>
+                <!--<label for="select_all">Select All</label>-->
+                <label for="select_all"><?php echo $lang['select_all']; ?></label>
             </div>
 
             <?php foreach ($posts as $post): ?>
                 <div>
                     <input type="checkbox" class="selected_posts" name="selected_posts[]" value="<?php echo $post['post_id']; ?>">
                     <?php echo htmlspecialchars($post['title']); ?> - <?php echo $post['created_at']; ?>
-                    <a href="post_edit.php?post_id=<?php echo $post['post_id']; ?>">Edit</a>
+                    <!--<a href="post_edit.php?post_id=<?php echo $post['post_id']; ?>">Edit</a>-->
+                    <a href="post_edit.php?post_id=<?php echo $post['post_id']; ?>"><?php echo $lang['edit']; ?></a>
                 </div>
             <?php endforeach; ?>
 
-            <button type="submit" name="delete">Delete Selected Posts</button>
+            <!--<button type="submit" name="delete">Delete Selected Posts</button>-->
+            <button type="submit" name="delete"><?php echo $lang['delete_selected_posts']; ?></button>
         </form>
 
-        <a href="admin.php">Return to Admin Panel</a>
+        <!--<a href="admin.php">Return to Admin Panel</a>-->
+        <a href="admin.php"><?php echo $lang['return_to_admin']; ?></a>
     </main>
 
     <script>

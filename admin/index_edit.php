@@ -52,6 +52,7 @@ $currentContent = $homepage ? htmlspecialchars_decode($homepage['content'], ENT_
     <link rel="icon" href="../favicon.ico" type="image/x-icon">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Edit Homepage</title>
     <style>
         @font-face {
@@ -111,5 +112,43 @@ $currentContent = $homepage ? htmlspecialchars_decode($homepage['content'], ENT_
         <textarea id="content" name="content" rows="10" cols="30"><?php echo $currentContent; ?></textarea><br>
         <button type="submit">Save Changes</button>
     </form>
+    <script>
+        $(document).ready(function() {
+            $('#content').on('paste', function(event) {
+                var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+                for (index in items) {
+                    var item = items[index];
+                    if (item.kind === 'file') {
+                        var blob = item.getAsFile();
+                        var formData = new FormData();
+                        formData.append('image', blob);
+
+                        $.ajax({
+                            url: '../admin/imghost.php', // 确保这个路径正确指向你的图片上传处理脚本
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            dataType: 'json', // 指定响应数据类型为 JSON
+                            success: function(data) {
+                                if(data.url) {
+                                    var imageUrl = data.url; // 使用解析后的 URL
+                                    var markdownImage = '![](' + imageUrl + ')'; // 构造 Markdown 格式的图片链接
+                                    var currentContent = $('#content').val();
+                                    $('#content').val(currentContent + "\n" + markdownImage); // 将链接插入文本区域
+                                } else {
+                                    alert('Image upload failed.');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                alert('Image upload failed. Error: ' + error);
+                            }
+                        });
+                        break; // 假定每次只处理一个粘贴的图片
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
